@@ -1,5 +1,5 @@
 /*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
+Copyright © 2025 Jahred Danker jahrede@gmail.com
 */
 package cmd
 
