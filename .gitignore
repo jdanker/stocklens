@@ -26,3 +26,22 @@ go.work.sum
 
 # mac
 **/.DS_Store
+
+#Python
+# Byte-compiled files
+__pycache__/
+*.py[cod]
+
+# Cache files
+*.cache
+*.pyo
+*.pyd
+*.pyc
+
+# Compiled C extensions
+*.so
+# Virtual environment directories
+venv/
+.env/
+*.env
+
