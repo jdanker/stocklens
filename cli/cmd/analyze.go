@@ -6,19 +6,32 @@ package cmd
 import (
 	"fmt"
 
-
 	"github.com/spf13/cobra"
 )
+
+type analysisResponse struct {
+	Ticker string   `json:"ticker"`
+	Price  float64  `json:"price"`
+	PE     *float64 `json:"pe,omitempty"`
+}
 
 // analyzeCmd represents the analyze command
 var analyzeCmd = &cobra.Command{
 	Use:   "analyze [ticker]",
 	Short: "Analyze a stock by a ticker symbol",
-	Long: `Fetches stock data and calculates a valuation score.`,
+	Long:  `Fetches stock data and calculates a valuation score.`,
 	Args:  cobra.ExactArgs(1), // Requires exactly one argument
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		ticker := args[0]
-		fmt.Printf("Analyzing stock: %s\n", ticker)
+		var resp analysisResponse
+		if err := fetchJSON(analyzeURL(ticker), &resp); err != nil {
+			return err
+		}
+		fmt.Fprintf(cmd.OutOrStdout(), "%s price: %.2f\n", resp.Ticker, resp.Price)
+		if resp.PE != nil {
+			fmt.Fprintf(cmd.OutOrStdout(), "P/E: %.2f\n", *resp.PE)
+		}
+		return nil
 	},
 }
 
