@@ -9,14 +9,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
+type priceResponse struct {
+	Ticker string  `json:"ticker"`
+	Price  float64 `json:"price"`
+}
+
 // priceCmd represents the price command
 var priceCmd = &cobra.Command{
-	Use:   "price",
+	Use:   "price [ticker]",
 	Short: "Returns the current price of the stock",
-	Long: `Returns the current price of the ticker symbol provided. 
-	Price is last known price during standard market hours`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("price called")
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		ticker := args[0]
+		var resp priceResponse
+		if err := fetchJSON(priceURL(ticker), &resp); err != nil {
+			return err
+		}
+		fmt.Fprintf(cmd.OutOrStdout(), "%s price: %.2f\n", resp.Ticker, resp.Price)
+		return nil
 	},
 }
 
